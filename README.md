@@ -90,5 +90,5 @@ public void buttonAddItem(View v) {
 
 ## 📎 참고 자료
 
-- 📂 [프로젝트 발표 자료 다운로드](첨부링크)
+- 📂 [프로젝트 발표 자료 다운로드](https://help-center.payhere.in/feature/kiosk/customer)
 - 📑 [관련 레퍼런스 및 문서](첨부링크)
