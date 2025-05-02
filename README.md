@@ -43,23 +43,103 @@
 
 ---
 
-## 📱 주요 기능
+## 📱 맡은 역할
 
-### ✅ 초기 화면
-- 음료 종류, 사이즈, 옵션 등을 체계적으로 선택 가능  
-- 명확하고 직관적인 항목 구성
+### ✅ 음료 옵션 선택화면 프론트엔드 구현
 
-### ✅ 장바구니 기능
-- 메뉴 추가, 수량 수정, 삭제 기능  
-- 실시간 데이터 반영 및 UI 업데이트  
+- **음료 메뉴 선택을 위한 사각형 버튼 UI**  
+  XML에서 `LinearLayout`, `GridLayout`, `CardView` 등을 사용해 **정사각형 버튼 구조**를 설계하였습니다.
+- 버튼은 **크기, 색상, 선택 여부에 따라 동적 스타일 변경**되며, 터치 시 효과가 적용됩니다.
 
-```java
-public void buttonAddItem(View v) {
-    menuName.add("카페라떼");
-    menuQuantity.add(1);
-    menuPrice.add(4800);
-    adapter.notifyDataSetChanged();
+### 🧩 UI 레이아웃 구조
+
+### 🎨  메뉴 옵션 선택 화면
+사용자가 커피를 주문할 때 온도, 사이즈, 시럽, 얼음 양 등을 직관적으로 선택할 수 있는 기능을 제공합니다.
+
+✔ 커스텀 대화창을 통해 옵션을 선택할 수 있음
+
+✔ 사용자 경험을 고려하여 직관적인 UI 구성
+
+✔ 폰트 설정을 적용하여 일관된 디자인 유지
+
+
+```xml
+// 메뉴를 하나 골랐을 때 나타나는 옵션 선택창 생성
+public void buttonAddItem(View v) { 
+    // 커스텀 대화메뉴 생성 후 띄우기 
+    Dialog optionDialog = new Dialog(MenuActivity.this); 
+    optionDialog.setContentView(R.layout.activity_option); 
+    optionDialog.show();
+    resetSelections(); 
+
+    // activity_option.xml 에 있는 UI 요소 아이디 가져오기
+    selectMenuPrice = optionDialog.findViewById(R.id.selectMenuPrice);
+    selectMenuName = optionDialog.findViewById(R.id.selectMenuName);
+    btnComplete = optionDialog.findViewById(R.id.btn_complete);
+    TextViewCoffeeInfo = optionDialog.findViewById(R.id.TextViewCoffeeInfo);
+
+    // 폰트 설정
+    Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/NanumBarunGothic-YetHangul.ttf");
+    btnComplete.setTypeface(customFont);
+    btnComplete.setEnabled(false);
+
+    // 선택한 메뉴를 배열에 저장하고 화면에 보여줌
+    buttonAddItem1 = findViewById(R.id.buttonAddItem1);
+    buttonAddItem2 = findViewById(R.id.buttonAddItem2);
 }
+
+    <!-- 다른 메뉴들도 동일하게 반복 -->
+```
+
+- 🔥 HOT / ICE 선택 – 버튼 클릭으로 원하는 온도 설정
+- 📏 사이즈 선택 – SMALL, MEDIUM, LARGE 옵션 제공
+- 🍯 시럽 선택 – 바닐라, 헤이즐넛 등 추가 가능
+- ❄️ 얼음 양 설정 – 기본값 또는 사용자 맞춤 설정
+
+```
+btnComplete.setOnClickListener(view2 -> {
+    // 핫/아이스 선택 저장
+    if (SelectedHot == 1) {
+        menuOption1.add("HOT");
+    } else if (SelectedHot == 2) {
+        menuOption1.add("ICE");
+    }
+
+    // 사이즈 선택 저장
+    if (SelectedSize == 1) {
+        menuOption2.add("SMALL");
+    } else if (SelectedSize == 2) {
+        menuOption2.add("MEDIUM");
+    } else if (SelectedSize == 3) {
+        menuOption2.add("LARGE");
+    }
+
+    // 시럽 선택 저장
+    if (SelectedTopping == 1) {
+        menuOption3.add("바닐라 시럽");
+    } else if (SelectedTopping == 2) {
+        menuOption3.add("헤이즐넛 시럽");
+    } else if (SelectedTopping == 3) {
+        menuOption3.add("시럽 없음");
+    }
+
+    // 얼음 양 선택 저장
+    if (SelectedIce == 1) {
+        menuOption4.add("얼음양 없이");
+    } else if (SelectedIce == 2) {
+        menuOption4.add("얼음양 보통");
+    } else if (SelectedIce == 3) {
+        menuOption4.add("얼음양 많이");
+    }
+
+    // 최종 가격 업데이트
+    menuPrice.set(menuPrice.size() - 1, menuPrice.get(menuPrice.size() - 1) + SelectedHotPrice + SelectedSizePrice + SelectedToppingPrice);
+
+    // UI 업데이트
+    adapter.notifyDataSetChanged();
+    optionDialog.dismiss();
+});
+
 ```
 
 ### ✅ 결제 및 포인트 시스템
@@ -78,13 +158,9 @@ public void buttonAddItem(View v) {
 ---
 
 ## 🎤 프로젝트 회고
+이번 프로젝트를 통해 처음으로 안드로이드 스튜디오를 활용한 앱 개발에 도전했습니다. 실제 서비스에서 활용 가능한 키오스크 프로그램을 제작하면서, 사용자 관점에서 UI/UX를 설계하는 과정이 특히 흥미로웠습니다.
+코드 작성 중 발생한 오류를 해결하고 디버깅을 반복하는 과정에서 많은 시행착오를 겪었지만, 최종적으로 완성된 코드가 정상적으로 작동했을 때의 성취감은 말로 표현할 수 없을 정도였습니다. 이 경험을 통해 안드로이드 개발의 기초를 탄탄히 다지는 계기가 되었고, 앞으로의 프로젝트에서도 이번 경험을 적극적으로 활용하고 싶습니다.
 
-| 이름 | 회고 내용 |
-|------|-----------|
-| **김서임** | 안드로이드 스튜디오를 활용한 첫 앱 개발. 사용자 관점 UI 설계의 중요성을 배움. |
-| **박은호** | 협업 과정에서 커뮤니케이션의 중요성과 팀워크를 실감. UI 조율 과정이 특히 의미 있었음. |
-| **강연주** | 사용자의 행동을 고려한 UI 설계의 어려움을 느끼고, 사용성 향상을 위한 고민이 컸던 프로젝트. |
-| **윤준영** | RecyclerView, Fragment 등 다양한 안드로이드 기술을 익히고 실무 감각을 키움. |
 
 ---
 
